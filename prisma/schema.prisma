@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:admin@localhost:5432/coffees"
+}
+
+model Coffee {
+  id          Int        @id @default(autoincrement())
+  name        String     @unique
+  brand       String
+  flavors     String[]
+  coffee_type CoffeeType @default(Hot)
+}
+
+enum CoffeeType {
+  Hot
+  Iced
+  Blended
+}

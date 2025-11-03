@@ -4,19 +4,29 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:admin@localhost:5432/coffees"
-}
-
-model Coffee {
-  id          Int        @id @default(autoincrement())
-  name        String     @unique
-  brand       String
-  flavors     String[]
-  coffee_type CoffeeType @default(Hot)
+  url      = env("DATABASE_URL")
 }
 
 enum CoffeeType {
   Hot
   Iced
   Blended
+}
+
+model Coffee {
+  id         Int        @id @default(autoincrement())
+  name       String     @unique
+  brand      String
+  flavors    String[]
+  coffeeType CoffeeType @default(Hot)
+  createdAt  DateTime   @default(now())
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  phone     String?
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
 }

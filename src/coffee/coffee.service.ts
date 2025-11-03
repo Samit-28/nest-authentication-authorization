@@ -1,26 +1,39 @@
+import { Prisma } from '@prisma/client';
 import { Injectable } from '@nestjs/common';
 import { CreateCoffeeDto } from './dto/create-coffee.dto';
 import { UpdateCoffeeDto } from './dto/update-coffee.dto';
+import { PrismaService } from '../common/prisma/prisma.service';
 
 @Injectable()
 export class CoffeeService {
-  create(createCoffeeDto: CreateCoffeeDto) {
-    return 'This action adds a new coffee';
+  constructor(private readonly prisma: PrismaService) {}
+
+  async create(createCoffeeDto: CreateCoffeeDto) {
+    const data: Prisma.CoffeeCreateInput = {
+      name: createCoffeeDto.name,
+      brand: createCoffeeDto.brand,
+      flavors: createCoffeeDto.flavors,
+      coffeeType: createCoffeeDto.coffeeType,
+    };
+    return await this.prisma.coffee.create({ data });
   }
 
-  findAll() {
-    return `This action returns all coffee`;
+  async findAll() {
+    return await this.prisma.coffee.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} coffee`;
+  async findOne(id: number) {
+    return await this.prisma.coffee.findUnique({ where: { id } });
   }
 
-  update(id: number, updateCoffeeDto: UpdateCoffeeDto) {
-    return `This action updates a #${id} coffee`;
+  async update(id: number, updateCoffeeDto: UpdateCoffeeDto) {
+    return await this.prisma.coffee.update({
+      where: { id },
+      data: updateCoffeeDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} coffee`;
+  async remove(id: number) {
+    return await this.prisma.coffee.delete({ where: { id } });
   }
 }
